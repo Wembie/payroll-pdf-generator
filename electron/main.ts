@@ -29,7 +29,7 @@ function createWindow() {
 
   if (isDev) {
     win.loadURL('http://localhost:5173')
-    // win.webContents.openDevTools({ mode: 'detach' })
+    // win.webContents.openDevTools({ mode: 'detach' }) // Uncomment this line to open DevTools in development mode
   } else {
     win.loadFile(path.join(__dirname, '../dist/index.html'))
   }
