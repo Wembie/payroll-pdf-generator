@@ -1,0 +1,120 @@
+name: CD — FirmaFlow Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  # ── 1. Tag — si VERSION cambió, crear tag v{VERSION} ──────────────────────────
+  tag:
+    name: Create git tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+      tagged: ${{ steps.ver.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if VERSION changed
+        id: ver
+        run: |
+          if git diff HEAD~1 HEAD -- VERSION | grep -q '^+[^+]'; then
+            VERSION="$(cat VERSION | tr -d '[:space:]')"
+            echo "changed=true"  >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "version=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create and push tag
+        if: steps.ver.outputs.changed == 'true'
+        run: |
+          TAG="v${{ steps.ver.outputs.version }}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --tags origin | grep -q "refs/tags/${TAG}$"; then
+            echo "Tag ${TAG} ya existe — omitiendo."
+          else
+            git tag -a "${TAG}" -m "Release ${TAG}"
+            git push origin "${TAG}"
+            echo "Tag ${TAG} creado."
+          fi
+
+  # ── 2. Build — compilar instaladores en cada plataforma ───────────────────────
+  build:
+    name: Build (${{ matrix.os }})
+    needs: tag
+    if: needs.tag.outputs.tagged == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: release-windows
+          - os: macos-latest
+            artifact: release-macos
+          - os: ubuntu-latest
+            artifact: release-linux
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (Electron + Vite + electron-builder)
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # macOS code signing — configurar si se tiene certificado
+          # CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          # CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: release/**/*
+          retention-days: 7
+
+  # ── 3. Release — publicar GitHub Release con los instaladores ─────────────────
+  release:
+    name: Publish GitHub Release
+    needs: [tag, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.tag.outputs.version }}
+          name: FirmaFlow v${{ needs.tag.outputs.version }}
+          generate_release_notes: true
+          files: |
+            artifacts/release-windows/**/*
+            artifacts/release-macos/**/*
+            artifacts/release-linux/**/*

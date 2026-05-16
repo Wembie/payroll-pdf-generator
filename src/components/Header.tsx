@@ -19,6 +19,9 @@ export const Header: React.FC = () => (
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-500 text-xs font-mono font-semibold border border-slate-200">
+          v{__APP_VERSION__}
+        </span>
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-100">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Activo
