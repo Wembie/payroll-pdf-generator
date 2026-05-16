@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "vite: dev server",
+      "type": "npm",
+      "script": "dev:vite",
+      "isBackground": true,
+      "presentation": {
+        "group": "dev",
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "vite",
+          "endsPattern": "Local:\\s+http://localhost"
+        }
+      }
+    },
+    {
+      "label": "electron: compile ts",
+      "type": "shell",
+      "command": "npx tsc -p tsconfig.electron.json",
+      "dependsOn": "vite: dev server",
+      "presentation": {
+        "group": "dev",
+        "reveal": "silent"
+      },
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "firmaflow: launch dev",
+      "dependsOn": "electron: compile ts",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
