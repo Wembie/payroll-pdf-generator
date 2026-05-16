@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Person, FormData, Toast } from '../types'
 import { generateId } from '../utils/formatters'
 
@@ -17,6 +17,29 @@ export function usePayroll() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [toasts, setToasts] = useState<Toast[]>([])
+  const [precioPerPaquete, setPrecioState] = useState(0)
+  const precioRef = useRef(0)
+
+  const setPrecioPerPaquete = useCallback((val: number) => {
+    precioRef.current = val
+    setPrecioState(val)
+    // re-compute value if packages already filled
+    setForm(prev => {
+      if (!prev.totalPackages || val <= 0) return prev
+      return { ...prev, value: ((Number(prev.totalPackages) || 0) * val).toString() }
+    })
+  }, [])
+
+  // Use this instead of setForm directly — auto-computes value on package change
+  const updateFormField = useCallback((key: keyof FormData, value: string) => {
+    setForm(prev => {
+      const next = { ...prev, [key]: value }
+      if (key === 'totalPackages' && precioRef.current > 0) {
+        next.value = ((Number(value) || 0) * precioRef.current).toString()
+      }
+      return next
+    })
+  }, [])
 
   const addToast = useCallback((message: string, type: Toast['type']) => {
     const id = generateId()
@@ -107,11 +130,13 @@ export function usePayroll() {
   return {
     people,
     form,
-    setForm,
+    updateFormField,
     errors,
     editingId,
     toasts,
     totalGeneral,
+    precioPerPaquete,
+    setPrecioPerPaquete,
     handleSubmit,
     handleEdit,
     handleDelete,

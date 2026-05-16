@@ -1,11 +1,13 @@
 import React from 'react'
 import { FormData } from '../types'
+import { formatCurrency } from '../utils/formatters'
 
 interface Props {
   form: FormData
   errors: Partial<FormData>
   editingId: string | null
-  onChange: (form: FormData) => void
+  precioPerPaquete: number
+  onFieldChange: (key: keyof FormData, value: string) => void
   onSubmit: () => void
   onCancel: () => void
 }
@@ -13,12 +15,16 @@ interface Props {
 interface FieldProps {
   label: string
   error?: string
+  badge?: React.ReactNode
   children: React.ReactNode
 }
 
-const Field: React.FC<FieldProps> = ({ label, error, children }) => (
+const Field: React.FC<FieldProps> = ({ label, error, badge, children }) => (
   <div className="flex flex-col gap-1.5">
-    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{label}</label>
+    <div className="flex items-center justify-between">
+      <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{label}</label>
+      {badge}
+    </div>
     {children}
     {error && (
       <span className="text-xs text-red-500 font-medium flex items-center gap-1">
@@ -34,11 +40,20 @@ const Field: React.FC<FieldProps> = ({ label, error, children }) => (
 const inputBase =
   'w-full px-3.5 py-2.5 rounded-xl border text-sm font-medium text-slate-800 bg-white transition-all duration-150 outline-none placeholder:text-slate-300'
 const inputNormal = `${inputBase} border-slate-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100`
-const inputError = `${inputBase} border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100`
+const inputError  = `${inputBase} border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100`
+const inputAuto   = `${inputBase} border-emerald-200 bg-emerald-50/40 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100`
 
-export const PersonForm: React.FC<Props> = ({ form, errors, editingId, onChange, onSubmit, onCancel }) => {
+export const PersonForm: React.FC<Props> = ({
+  form, errors, editingId, precioPerPaquete, onFieldChange, onSubmit, onCancel,
+}) => {
   const set = (key: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    onChange({ ...form, [key]: e.target.value })
+    onFieldChange(key, e.target.value)
+
+  const isAutoCalc = precioPerPaquete > 0
+  const computedPreview =
+    isAutoCalc && form.totalPackages
+      ? `${form.totalPackages} × ${formatCurrency(precioPerPaquete)} = ${formatCurrency((Number(form.totalPackages) || 0) * precioPerPaquete)}`
+      : null
 
   return (
     <div className="bg-white rounded-2xl shadow-card border border-slate-100 p-6 animate-fade-in">
@@ -53,7 +68,11 @@ export const PersonForm: React.FC<Props> = ({ form, errors, editingId, onChange,
           <h2 className="text-sm font-bold text-slate-800">
             {editingId ? 'Editar persona' : 'Agregar persona'}
           </h2>
-          <p className="text-xs text-slate-400">Completa todos los campos del formulario</p>
+          <p className="text-xs text-slate-400">
+            {isAutoCalc
+              ? `Valor se calcula automáticamente · ${formatCurrency(precioPerPaquete)} por paquete`
+              : 'Completa todos los campos del formulario'}
+          </p>
         </div>
       </div>
 
@@ -107,17 +126,40 @@ export const PersonForm: React.FC<Props> = ({ form, errors, editingId, onChange,
           />
         </Field>
 
-        <Field label="Valor (COP)" error={errors.value}>
+        <Field
+          label="Valor (COP)"
+          error={errors.value}
+          badge={
+            isAutoCalc ? (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold border border-emerald-100">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Auto
+              </span>
+            ) : undefined
+          }
+        >
           <input
             type="number"
             min="0"
             placeholder="0"
             value={form.value}
             onChange={set('value')}
-            className={errors.value ? inputError : inputNormal}
+            className={errors.value ? inputError : isAutoCalc ? inputAuto : inputNormal}
           />
         </Field>
       </div>
+
+      {computedPreview && (
+        <div className="mt-3 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center gap-2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span className="text-xs font-semibold text-emerald-700">{computedPreview}</span>
+        </div>
+      )}
 
       <div className="flex items-center gap-3 mt-5 pt-5 border-t border-slate-100">
         <button
