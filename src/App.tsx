@@ -4,7 +4,7 @@ import { PersonForm } from './components/PersonForm'
 import { PayrollTable } from './components/PayrollTable'
 import { ToastContainer } from './components/ToastContainer'
 import { usePayroll } from './hooks/usePayroll'
-import { formatCurrency } from './utils/formatters'
+import { formatCurrency, formatNumber } from './utils/formatters'
 import { CompanyConfig } from './types'
 
 const App: React.FC = () => {
@@ -49,7 +49,7 @@ const App: React.FC = () => {
         <div className="grid grid-cols-3 gap-4">
           <StatCard
             label="Personas registradas"
-            value={people.length.toString()}
+            value={formatNumber(people.length)}
             icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -61,7 +61,7 @@ const App: React.FC = () => {
           />
           <StatCard
             label="Total paquetes"
-            value={people.reduce((s, p) => s + p.totalPackages, 0).toString()}
+            value={formatNumber(people.reduce((s, p) => s + p.totalPackages, 0))}
             icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>

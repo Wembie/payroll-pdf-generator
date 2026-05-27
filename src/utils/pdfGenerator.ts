@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { Person, CompanyConfig } from '../types'
-import { formatCurrency, formatDate, formatDateLong } from './formatters'
+import { formatCurrency, formatDate, formatDateLong, formatNumber } from './formatters'
 
 export function generatePDF(people: Person[], totalGeneral: number, company: CompanyConfig): void {
   const doc = new jsPDF({
@@ -64,7 +64,7 @@ export function generatePDF(people: Person[], totalGeneral: number, company: Com
     p.cedula,
     formatDate(p.startDate),
     formatDate(p.endDate),
-    p.totalPackages.toString(),
+    formatNumber(p.totalPackages),
     formatCurrency(p.value),
     '',
   ])

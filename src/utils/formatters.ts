@@ -7,6 +7,10 @@ export function formatCurrency(value: number): string {
   }).format(value)
 }
 
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat('es-CO').format(value)
+}
+
 export function formatDate(dateStr: string): string {
   if (!dateStr) return ''
   const [year, month, day] = dateStr.split('-')
