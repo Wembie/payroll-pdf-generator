@@ -1,33 +1,26 @@
 # FirmaFlow — Roadmap & TO-DO
 
-> Funcionalidades planeadas, ordenadas por impacto. Marcar con `[x]` al completar.
+> Funcionalidades planeadas, ordenadas por impacto. La app corre como web pública y como app de escritorio (Electron). Los ítems marcados aplican a ambas plataformas salvo que se indique lo contrario.
 
 ---
 
 ## 🔴 Alta prioridad
 
-- [ ] **Persistencia de datos** (`electron-store`)
-  Guardar automáticamente personas, precio por paquete y configuración al cerrar la app.
-  Sin esto, todo se pierde al reiniciar.
-
-- [ ] **Guardar y cargar nóminas**
-  Crear nóminas con nombre, guardarlas localmente y reabrirlas en cualquier momento.
-  Útil para manejar múltiples períodos o clientes.
+- [ ] **Persistencia con localStorage**
+  Guardar automáticamente personas, precio y configuración de empresa en el navegador.
+  Sin esto, todo se pierde al recargar la página.
 
 - [ ] **Importar desde CSV / Excel**
   Cargar una planilla existente para poblar la tabla sin ingresar fila por fila.
-  Librería sugerida: `xlsx` o `papaparse`.
+  Librería sugerida: `papaparse` (CSV) o `xlsx` (Excel). Funciona vía `<input type="file">` en web.
 
-- [ ] **Configuración de empresa**
-  Nombre de empresa, NIT y logo que aparezcan en el header del PDF generado.
-  Reemplaza los valores estáticos actuales.
+- [ ] **Exportar / importar nómina como JSON**
+  Botón para descargar la nómina actual como `.json` y otro para cargarla de vuelta.
+  Reemplaza el concepto de "guardar en disco" — funciona tanto en web como en Electron.
 
 ---
 
 ## 🟡 Media prioridad
-
-- [ ] **Historial de nóminas**
-  Listado de nóminas generadas anteriormente con fecha, total y opción de reabrir o re-exportar PDF.
 
 - [ ] **Múltiples categorías de precio**
   Definir varias tarifas (Tipo A, Tipo B, etc.) y asignar una por persona en lugar de un precio global.
@@ -39,21 +32,18 @@
   Botón adicional para descargar la tabla como archivo `.xlsx`.
   Librería sugerida: `xlsx` (SheetJS).
 
+- [ ] **Búsqueda y filtro en tabla**
+  Input para filtrar filas por nombre o cédula. Útil con 50+ registros.
+
 - [ ] **Imprimir directo**
-  Botón "Imprimir" que use `win.webContents.print()` sin necesidad de abrir el PDF primero.
+  Botón "Imprimir" que use `window.print()` con estilos de impresión definidos en CSS.
 
 ---
 
 ## 🟢 Baja prioridad / QoL
 
-- [ ] **Búsqueda y filtro en tabla**
-  Input para filtrar filas por nombre o cédula. Útil con 50+ registros.
-
 - [ ] **Dark mode**
-  Toggle de tema oscuro. Tailwind ya soporta `dark:`, solo falta el switch y persistir la preferencia.
-
-- [ ] **Auto-backup JSON**
-  Guardar snapshot de los datos cada cierto tiempo en disco como respaldo adicional.
+  Toggle de tema oscuro. Tailwind ya soporta `dark:`, solo falta el switch y persistir la preferencia en `localStorage`.
 
 - [ ] **Atajos de teclado**
   | Atajo | Acción |
@@ -63,6 +53,9 @@
   | `Ctrl + P` | Generar PDF |
   | `Ctrl + Z` | Deshacer última eliminación |
 
+- [ ] **Logo de empresa en PDF**
+  Permitir subir una imagen (`.png`/`.jpg`) que aparezca en el encabezado del PDF en lugar del círculo "FF".
+
 ---
 
 ## ✅ Completado
@@ -71,7 +64,13 @@
 - [x] Tabla dinámica con edición y eliminación
 - [x] Total general automático con formato COP
 - [x] Constante de precio por paquete (auto-cálculo de valor)
+- [x] Separadores de miles en todos los campos numéricos
 - [x] Generación de PDF landscape A4 con firma por fila
 - [x] Toasts de feedback animados
-- [x] Configuración VSCode (F5 para correr)
+- [x] Configuración de empresa editable (nombre, NIT, elaborado por)
+- [x] Datos de empresa reflejados en encabezado y pie del PDF
+- [x] Versión de la app visible en el header (tomada del archivo `VERSION`)
+- [x] CI/CD con GitHub Actions (type-check, build, release de instaladores)
+- [x] Deploy web automático en GitHub Pages al hacer push a `main`
+- [x] Configuración VSCode (F5 para correr en Electron)
 - [x] `.gitignore` y `README.md`

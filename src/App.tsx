@@ -34,10 +34,9 @@ const App: React.FC = () => {
   })
 
   const handlePrecioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value
-    setRawPrecio(raw)
-    const val = Number(raw)
-    setPrecioPerPaquete(isNaN(val) ? 0 : val)
+    const digits = e.target.value.replace(/[^0-9]/g, '')
+    setRawPrecio(digits)
+    setPrecioPerPaquete(digits ? Number(digits) : 0)
   }
 
   return (
@@ -161,10 +160,10 @@ const App: React.FC = () => {
                 <div className="relative flex-1 max-w-[220px]">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">$</span>
                   <input
-                    type="number"
-                    min="0"
+                    type="text"
+                    inputMode="numeric"
                     placeholder="0"
-                    value={rawPrecio}
+                    value={rawPrecio ? formatNumber(Number(rawPrecio)) : ''}
                     onChange={handlePrecioChange}
                     className="w-full pl-7 pr-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 text-sm font-semibold text-slate-800 bg-white outline-none transition-all duration-150 placeholder:text-slate-300"
                   />

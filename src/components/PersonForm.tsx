@@ -1,6 +1,8 @@
 import React from 'react'
 import { FormData } from '../types'
-import { formatCurrency } from '../utils/formatters'
+import { formatCurrency, formatNumber } from '../utils/formatters'
+
+const stripNonDigits = (s: string) => s.replace(/[^0-9]/g, '')
 
 interface Props {
   form: FormData
@@ -52,7 +54,7 @@ export const PersonForm: React.FC<Props> = ({
   const isAutoCalc = precioPerPaquete > 0
   const computedPreview =
     isAutoCalc && form.totalPackages
-      ? `${form.totalPackages} × ${formatCurrency(precioPerPaquete)} = ${formatCurrency((Number(form.totalPackages) || 0) * precioPerPaquete)}`
+      ? `${formatNumber(Number(form.totalPackages) || 0)} × ${formatCurrency(precioPerPaquete)} = ${formatCurrency((Number(form.totalPackages) || 0) * precioPerPaquete)}`
       : null
 
   return (
@@ -117,11 +119,11 @@ export const PersonForm: React.FC<Props> = ({
 
         <Field label="Total paquetes" error={errors.totalPackages}>
           <input
-            type="number"
-            min="0"
+            type="text"
+            inputMode="numeric"
             placeholder="0"
-            value={form.totalPackages}
-            onChange={set('totalPackages')}
+            value={form.totalPackages ? formatNumber(Number(form.totalPackages)) : ''}
+            onChange={e => onFieldChange('totalPackages', stripNonDigits(e.target.value))}
             className={errors.totalPackages ? inputError : inputNormal}
           />
         </Field>
@@ -141,11 +143,11 @@ export const PersonForm: React.FC<Props> = ({
           }
         >
           <input
-            type="number"
-            min="0"
+            type="text"
+            inputMode="numeric"
             placeholder="0"
-            value={form.value}
-            onChange={set('value')}
+            value={form.value ? formatNumber(Number(form.value)) : ''}
+            onChange={e => onFieldChange('value', stripNonDigits(e.target.value))}
             className={errors.value ? inputError : isAutoCalc ? inputAuto : inputNormal}
           />
         </Field>
