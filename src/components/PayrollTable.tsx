@@ -1,6 +1,6 @@
 import React from 'react'
 import { Person, CompanyConfig } from '../types'
-import { formatCurrency, formatDate } from '../utils/formatters'
+import { formatCurrency, formatDate, formatNumber } from '../utils/formatters'
 import { generatePDF } from '../utils/pdfGenerator'
 
 interface Props {
@@ -147,7 +147,7 @@ const TableRow: React.FC<RowProps> = ({ person, index, isEditing, onEdit, onDele
     </td>
     <td className="px-4 py-3">
       <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 rounded-lg bg-slate-100 text-xs font-bold text-slate-700">
-        {person.totalPackages}
+        {formatNumber(person.totalPackages)}
       </span>
     </td>
     <td className="px-4 py-3">
