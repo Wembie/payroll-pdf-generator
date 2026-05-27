@@ -147,7 +147,7 @@ export function generatePDF(people: Person[], totalGeneral: number, company: Com
   doc.setFontSize(7.5)
   doc.setFont('helvetica', 'normal')
   doc.setTextColor(100, 116, 139)
-  doc.text('Elaborado por: Valeria Peña', margin, footerY + 3)
+  doc.text(`Elaborado por: ${company.preparedBy}`, margin, footerY + 3)
 
   doc.setFont('helvetica', 'normal')
   doc.text(`Generado el ${dateStr}`, pageW / 2, footerY + 3, { align: 'center' })

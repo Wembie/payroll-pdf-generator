@@ -20,6 +20,7 @@ export interface FormData {
 export interface CompanyConfig {
   name: string
   nit: string
+  preparedBy: string
 }
 
 export type ToastType = 'success' | 'error' | 'info'

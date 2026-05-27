@@ -30,6 +30,7 @@ const App: React.FC = () => {
   const [company, setCompany] = useState<CompanyConfig>({
     name: 'S.T.C mensajería S.A.S',
     nit: '902060071-1',
+    preparedBy: 'Valeria Peña',
   })
 
   const handlePrecioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,6 +119,17 @@ const App: React.FC = () => {
                   value={company.nit}
                   onChange={e => setCompany(c => ({ ...c, nit: e.target.value }))}
                   className="w-36 px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm font-mono font-semibold text-slate-800 bg-white outline-none transition-all duration-150"
+                />
+              </div>
+              <div className="flex items-center gap-2 min-w-[200px]">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
+                  Elaborado por
+                </label>
+                <input
+                  type="text"
+                  value={company.preparedBy}
+                  onChange={e => setCompany(c => ({ ...c, preparedBy: e.target.value }))}
+                  className="flex-1 px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm font-semibold text-slate-800 bg-white outline-none transition-all duration-150"
                 />
               </div>
             </div>
