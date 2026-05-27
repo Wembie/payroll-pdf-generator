@@ -6,7 +6,7 @@ const appVersion = readFileSync('./VERSION', 'utf-8').trim()
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: process.env.VITE_APP_BASE ?? './',
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
   },
