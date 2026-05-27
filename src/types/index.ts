@@ -17,6 +17,11 @@ export interface FormData {
   value: string
 }
 
+export interface CompanyConfig {
+  name: string
+  nit: string
+}
+
 export type ToastType = 'success' | 'error' | 'info'
 
 export interface Toast {
