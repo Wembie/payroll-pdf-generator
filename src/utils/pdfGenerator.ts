@@ -1,9 +1,9 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { Person } from '../types'
+import { Person, CompanyConfig } from '../types'
 import { formatCurrency, formatDate, formatDateLong } from './formatters'
 
-export function generatePDF(people: Person[], totalGeneral: number): void {
+export function generatePDF(people: Person[], totalGeneral: number, company: CompanyConfig): void {
   const doc = new jsPDF({
     orientation: 'landscape',
     unit: 'mm',
@@ -34,16 +34,16 @@ export function generatePDF(people: Person[], totalGeneral: number): void {
   doc.setTextColor(255, 255, 255)
   doc.text('FF', margin + 7.5, 22.5)
 
-  // Title
-  doc.setFontSize(16)
+  // Company name
+  doc.setFontSize(15)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(255, 255, 255)
-  doc.text('FirmaFlow', margin + 22, 17)
+  doc.text(company.name, margin + 22, 17)
 
   doc.setFontSize(8)
   doc.setFont('helvetica', 'normal')
   doc.setTextColor(199, 210, 254)
-  doc.text('Generador de Nóminas y Comprobantes PDF', margin + 22, 23)
+  doc.text(`Nit: ${company.nit}`, margin + 22, 23)
 
   // Date right-aligned
   doc.setFontSize(8)

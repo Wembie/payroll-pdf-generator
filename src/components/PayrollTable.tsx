@@ -1,5 +1,5 @@
 import React from 'react'
-import { Person } from '../types'
+import { Person, CompanyConfig } from '../types'
 import { formatCurrency, formatDate } from '../utils/formatters'
 import { generatePDF } from '../utils/pdfGenerator'
 
@@ -7,6 +7,7 @@ interface Props {
   people: Person[]
   totalGeneral: number
   editingId: string | null
+  company: CompanyConfig
   onEdit: (person: Person) => void
   onDelete: (id: string) => void
   onPDFSuccess: () => void
@@ -16,13 +17,14 @@ export const PayrollTable: React.FC<Props> = ({
   people,
   totalGeneral,
   editingId,
+  company,
   onEdit,
   onDelete,
   onPDFSuccess,
 }) => {
   const handleGenerate = () => {
     if (people.length === 0) return
-    generatePDF(people, totalGeneral)
+    generatePDF(people, totalGeneral, company)
     onPDFSuccess()
   }
 

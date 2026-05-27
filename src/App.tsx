@@ -5,6 +5,7 @@ import { PayrollTable } from './components/PayrollTable'
 import { ToastContainer } from './components/ToastContainer'
 import { usePayroll } from './hooks/usePayroll'
 import { formatCurrency } from './utils/formatters'
+import { CompanyConfig } from './types'
 
 const App: React.FC = () => {
   const {
@@ -26,6 +27,10 @@ const App: React.FC = () => {
   } = usePayroll()
 
   const [rawPrecio, setRawPrecio] = useState('')
+  const [company, setCompany] = useState<CompanyConfig>({
+    name: 'S.T.C mensajería S.A.S',
+    nit: '902060071-1',
+  })
 
   const handlePrecioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value
@@ -74,6 +79,49 @@ const App: React.FC = () => {
             }
             color="bg-amber-50"
           />
+        </div>
+
+        {/* Company config */}
+        <div className="bg-white rounded-2xl shadow-card border border-slate-100 px-6 py-4">
+          <div className="flex items-center gap-6 flex-wrap">
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-800">Datos de la empresa</p>
+                <p className="text-xs text-slate-400">Aparecen en el encabezado del PDF</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 flex-1 flex-wrap min-w-[320px]">
+              <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
+                  Empresa
+                </label>
+                <input
+                  type="text"
+                  value={company.name}
+                  onChange={e => setCompany(c => ({ ...c, name: e.target.value }))}
+                  className="flex-1 px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm font-semibold text-slate-800 bg-white outline-none transition-all duration-150"
+                />
+              </div>
+              <div className="flex items-center gap-2 min-w-[160px]">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap">
+                  Nit
+                </label>
+                <input
+                  type="text"
+                  value={company.nit}
+                  onChange={e => setCompany(c => ({ ...c, nit: e.target.value }))}
+                  className="w-36 px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm font-mono font-semibold text-slate-800 bg-white outline-none transition-all duration-150"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Price config */}
@@ -139,6 +187,7 @@ const App: React.FC = () => {
           people={people}
           totalGeneral={totalGeneral}
           editingId={editingId}
+          company={company}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onPDFSuccess={() => addToast('PDF generado exitosamente', 'success')}
