@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Person, CompanyConfig } from '../types'
 import { formatCurrency, formatDate, formatNumber } from '../utils/formatters'
 import { generatePDF } from '../utils/pdfGenerator'
+import { exportToCSV, exportToExcel } from '../utils/exportPeople'
 
 interface Props {
   people: Person[]
@@ -25,7 +26,19 @@ export const PayrollTable: React.FC<Props> = ({
   onImport,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const exportMenuRef = useRef<HTMLDivElement>(null)
   const [importing, setImporting] = useState(false)
+  const [showExportMenu, setShowExportMenu] = useState(false)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setShowExportMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   const handleGenerate = () => {
     if (people.length === 0) return
@@ -65,6 +78,58 @@ export const PayrollTable: React.FC<Props> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Export dropdown */}
+          <div ref={exportMenuRef} className="relative">
+            <button
+              onClick={() => setShowExportMenu(v => !v)}
+              disabled={people.length === 0}
+              title="Exportar datos"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span className="hidden sm:inline">Exportar</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-150 ${showExportMenu ? 'rotate-180' : ''}`}>
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+
+            {showExportMenu && (
+              <div className="absolute right-0 top-full mt-1.5 w-44 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-none z-20 overflow-hidden animate-scale-in">
+                <button
+                  onClick={() => { exportToCSV(people); setShowExportMenu(false) }}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-100"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                  </svg>
+                  <span>CSV</span>
+                  <span className="ml-auto text-xs text-slate-400">.csv</span>
+                </button>
+                <div className="h-px bg-slate-100 dark:bg-slate-700 mx-3" />
+                <button
+                  onClick={() => { exportToExcel(people); setShowExportMenu(false) }}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-100"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <line x1="3" y1="9" x2="21" y2="9"/>
+                    <line x1="3" y1="15" x2="21" y2="15"/>
+                    <line x1="9" y1="9" x2="9" y2="21"/>
+                  </svg>
+                  <span>Excel</span>
+                  <span className="ml-auto text-xs text-slate-400">.xlsx</span>
+                </button>
+              </div>
+            )}
+          </div>
+
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={importing}
