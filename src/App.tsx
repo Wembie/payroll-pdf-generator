@@ -24,6 +24,7 @@ const App: React.FC = () => {
     handleEdit,
     handleDelete,
     handleCancel,
+    handleImport,
     dismissToast,
     addToast,
   } = usePayroll()
@@ -207,6 +208,7 @@ const App: React.FC = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onPDFSuccess={() => addToast('PDF generado exitosamente', 'success')}
+          onImport={handleImport}
         />
       </main>
 

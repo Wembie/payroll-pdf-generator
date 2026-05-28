@@ -10,7 +10,7 @@
   Guardar automáticamente personas, precio y configuración de empresa en el navegador.
   Sin esto, todo se pierde al recargar la página.
 
-- [ ] **Importar desde CSV / Excel**
+- [x] **Importar desde CSV / Excel**
   Cargar una planilla existente para poblar la tabla sin ingresar fila por fila.
   Librería sugerida: `papaparse` (CSV) o `xlsx` (Excel). Funciona vía `<input type="file">` en web.
 
