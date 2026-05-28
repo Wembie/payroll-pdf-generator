@@ -6,7 +6,7 @@ interface Props {
 
 export const Header: React.FC<Props> = ({ onSettingsOpen }) => (
   <header className="drag-region bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none">
-    <div className="no-drag max-w-screen-2xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="no-drag max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
       <div className="flex items-center gap-4">
         <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-lg shadow-primary-500/30">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -19,7 +19,7 @@ export const Header: React.FC<Props> = ({ onSettingsOpen }) => (
         </div>
         <div>
           <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">FirmaFlow</h1>
-          <p className="text-xs text-slate-400 dark:text-slate-500 font-medium -mt-0.5">Generador de nóminas y comprobantes PDF</p>
+          <p className="hidden sm:block text-xs text-slate-400 dark:text-slate-500 font-medium -mt-0.5">Generador de nóminas y comprobantes PDF</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
