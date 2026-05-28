@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { Person, CompanyConfig } from '../types'
 import { formatCurrency, formatDate, formatNumber } from '../utils/formatters'
 import { generatePDF } from '../utils/pdfGenerator'
@@ -11,6 +11,7 @@ interface Props {
   onEdit: (person: Person) => void
   onDelete: (id: string) => void
   onPDFSuccess: () => void
+  onImport: (file: File) => Promise<void>
 }
 
 export const PayrollTable: React.FC<Props> = ({
@@ -21,11 +22,24 @@ export const PayrollTable: React.FC<Props> = ({
   onEdit,
   onDelete,
   onPDFSuccess,
+  onImport,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [importing, setImporting] = useState(false)
+
   const handleGenerate = () => {
     if (people.length === 0) return
     generatePDF(people, totalGeneral, company)
     onPDFSuccess()
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImporting(true)
+    await onImport(file)
+    setImporting(false)
+    e.target.value = ''
   }
 
   return (
@@ -50,18 +64,49 @@ export const PayrollTable: React.FC<Props> = ({
           </div>
         </div>
 
-        <button
-          onClick={handleGenerate}
-          disabled={people.length === 0}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:from-emerald-600 hover:to-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-200 active:scale-95"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Generar PDF
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing}
+            title="Importar CSV o Excel"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
+          >
+            {importing ? (
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="animate-spin">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+            ) : (
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            )}
+            <span className="hidden sm:inline">Importar</span>
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.xlsx,.xls"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+
+          <button
+            onClick={handleGenerate}
+            disabled={people.length === 0}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:from-emerald-600 hover:to-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-200 active:scale-95"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span className="hidden sm:inline">Generar PDF</span>
+            <span className="sm:hidden">PDF</span>
+          </button>
+        </div>
       </div>
 
       {people.length === 0 ? (

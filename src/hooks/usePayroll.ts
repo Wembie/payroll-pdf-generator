@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { Person, FormData, Toast } from '../types'
 import { generateId } from '../utils/formatters'
+import { importFromFile } from '../utils/importPeople'
 
 const emptyForm: FormData = {
   name: '',
@@ -125,6 +126,25 @@ export function usePayroll() {
     setErrors({})
   }, [])
 
+  const handleImport = useCallback(async (file: File) => {
+    const { people: imported, errors } = await importFromFile(file)
+    if (imported.length > 0) {
+      setPeople(prev => [...prev, ...imported])
+      addToast(
+        `${imported.length} persona${imported.length !== 1 ? 's' : ''} importada${imported.length !== 1 ? 's' : ''}`,
+        'success'
+      )
+    }
+    if (errors.length > 0) {
+      const msg = errors.length === 1 ? errors[0] : `${errors.length} filas con errores`
+      addToast(msg, 'error')
+      if (errors.length > 1) console.warn('Import errors:', errors)
+    }
+    if (imported.length === 0 && errors.length === 0) {
+      addToast('Archivo vacío', 'info')
+    }
+  }, [addToast])
+
   const totalGeneral = people.reduce((sum, p) => sum + p.value, 0)
 
   return {
@@ -141,6 +161,7 @@ export function usePayroll() {
     handleEdit,
     handleDelete,
     handleCancel,
+    handleImport,
     dismissToast,
     addToast,
   }
