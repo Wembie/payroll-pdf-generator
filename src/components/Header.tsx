@@ -1,7 +1,11 @@
 import React from 'react'
 
-export const Header: React.FC = () => (
-  <header className="drag-region bg-white border-b border-slate-100 shadow-sm">
+interface Props {
+  onSettingsOpen: () => void
+}
+
+export const Header: React.FC<Props> = ({ onSettingsOpen }) => (
+  <header className="drag-region bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none">
     <div className="no-drag max-w-screen-2xl mx-auto px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-lg shadow-primary-500/30">
@@ -14,18 +18,29 @@ export const Header: React.FC = () => (
           </svg>
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">FirmaFlow</h1>
-          <p className="text-xs text-slate-400 font-medium -mt-0.5">Generador de nóminas y comprobantes PDF</p>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">FirmaFlow</h1>
+          <p className="text-xs text-slate-400 dark:text-slate-500 font-medium -mt-0.5">Generador de nóminas y comprobantes PDF</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-500 text-xs font-mono font-semibold border border-slate-200">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-mono font-semibold border border-slate-200 dark:border-slate-700">
           v{__APP_VERSION__}
         </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-100">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold border border-emerald-100 dark:border-emerald-800">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Activo
         </span>
+        <button
+          onClick={onSettingsOpen}
+          title="Configuración"
+          className="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-150"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
