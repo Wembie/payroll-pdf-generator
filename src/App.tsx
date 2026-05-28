@@ -157,12 +157,12 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 sm:flex-1">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 sm:flex-1">
               <div className="flex items-center gap-2 flex-1">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap w-28 sm:w-auto">
                   Precio / paquete
                 </label>
-                <div className="relative flex-1 max-w-[220px]">
+                <div className="relative flex-1 sm:max-w-[220px]">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400 dark:text-slate-500">$</span>
                   <input
                     type="text"
@@ -176,7 +176,7 @@ const App: React.FC = () => {
               </div>
 
               {precioPerPaquete > 0 && (
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800 animate-scale-in">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800 animate-scale-in self-start sm:self-auto">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
