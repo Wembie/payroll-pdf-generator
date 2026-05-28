@@ -48,9 +48,9 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex flex-col">
       <Header onSettingsOpen={() => setShowSettings(true)} />
 
-      <main className="flex-1 max-w-screen-2xl w-full mx-auto px-6 py-6 flex flex-col gap-5">
+      <main className="flex-1 max-w-screen-2xl w-full mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-4 sm:gap-5">
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <StatCard
             label="Personas registradas"
             value={formatNumber(people.length)}
@@ -87,8 +87,8 @@ const App: React.FC = () => {
         </div>
 
         {/* Company config */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-card dark:shadow-none border border-slate-100 dark:border-slate-700 px-6 py-4">
-          <div className="flex items-center gap-6 flex-wrap">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-card dark:shadow-none border border-slate-100 dark:border-slate-700 px-4 sm:px-6 py-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             <div className="flex items-center gap-3 flex-shrink-0">
               <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-slate-700 flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -102,9 +102,9 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 flex-1 flex-wrap min-w-[320px]">
-              <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-1 sm:flex-wrap">
+              <div className="flex items-center gap-2 sm:flex-1 sm:min-w-[200px]">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap w-28 sm:w-auto">
                   Empresa
                 </label>
                 <input
@@ -114,19 +114,19 @@ const App: React.FC = () => {
                   className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/50 text-sm font-semibold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700 outline-none transition-all duration-150"
                 />
               </div>
-              <div className="flex items-center gap-2 min-w-[160px]">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
+              <div className="flex items-center gap-2 sm:min-w-[160px]">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap w-28 sm:w-auto">
                   Nit
                 </label>
                 <input
                   type="text"
                   value={company.nit}
                   onChange={e => setCompany(c => ({ ...c, nit: e.target.value }))}
-                  className="w-36 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/50 text-sm font-mono font-semibold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700 outline-none transition-all duration-150"
+                  className="flex-1 sm:w-36 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/50 text-sm font-mono font-semibold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700 outline-none transition-all duration-150"
                 />
               </div>
-              <div className="flex items-center gap-2 min-w-[200px]">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
+              <div className="flex items-center gap-2 sm:flex-1 sm:min-w-[200px]">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap w-28 sm:w-auto">
                   Elaborado por
                 </label>
                 <input
@@ -141,8 +141,8 @@ const App: React.FC = () => {
         </div>
 
         {/* Price config */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-card dark:shadow-none border border-slate-100 dark:border-slate-700 px-6 py-4">
-          <div className="flex items-center gap-6 flex-wrap">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-card dark:shadow-none border border-slate-100 dark:border-slate-700 px-4 sm:px-6 py-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             <div className="flex items-center gap-3 flex-shrink-0">
               <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-slate-700 flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -157,7 +157,7 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 flex-1 min-w-[280px]">
+            <div className="flex items-center gap-3 sm:flex-1">
               <div className="flex items-center gap-2 flex-1">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
                   Precio / paquete
@@ -230,13 +230,14 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ label, value, icon, color }) => (
-  <div className="bg-white dark:bg-slate-800 rounded-xl shadow-card dark:shadow-none border border-slate-100 dark:border-slate-700 px-5 py-4 flex items-center gap-4">
-    <div className={`w-10 h-10 rounded-lg ${color} flex items-center justify-center flex-shrink-0`}>
+  <div className="bg-white dark:bg-slate-800 rounded-xl shadow-card dark:shadow-none border border-slate-100 dark:border-slate-700 px-3 sm:px-5 py-3 sm:py-4 flex items-center gap-2 sm:gap-4">
+    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg ${color} flex items-center justify-center flex-shrink-0`}>
       {icon}
     </div>
     <div className="min-w-0">
-      <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide truncate">{label}</p>
-      <p className="text-lg font-extrabold text-slate-900 dark:text-white tabular-nums truncate">{value}</p>
+      <p className="hidden sm:block text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide truncate">{label}</p>
+      <p className="text-xs sm:hidden font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide truncate leading-tight">{label.split(' ')[0]}</p>
+      <p className="text-sm sm:text-lg font-extrabold text-slate-900 dark:text-white tabular-nums truncate">{value}</p>
     </div>
   </div>
 )
